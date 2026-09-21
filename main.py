@@ -13,9 +13,7 @@ import time
 import argparse
 import zipfile
 from io import BytesIO
-
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
 from utils.decorators import MessageDecorator
 from utils.provider import APIProvider
 
@@ -35,108 +33,31 @@ def readisdc():
         isdcodes = json.load(file)
     return isdcodes
 
-
-def get_version():
-    try:
-        return open(".version", "r").read().strip()
-    except Exception:
-        return '1.0'
-
-
-def clr():
-    if os.name == "nt":
-        os.system("cls")
-    else:
-        os.system("clear")
-
+country_codes = readisdc()["isdcodes"]
+__CONTRIBUTORS__ = ['Ansh Sharma']
+ALL_COLORS = [Fore.GREEN, Fore.RED, Fore.YELLOW, Fore.BLUE,
+              Fore.MAGENTA, Fore.CYAN, Fore.WHITE]
+RESET_ALL = Style.RESET_ALL
 
 def bann_text():
-    clr()
+    os.system("clear")
     logo = """
-   ████████ █████                 ██
-   ▒▒▒██▒▒▒ ██▒▒██                ██
-      ██    ██  ██        ██   ██ ██
-      ██    █████▒  ████  ███ ███ █████
-      ██    ██▒▒██ ██  ██ ██▒█▒██ ██▒▒██
-      ██    ██  ██ ██  ██ ██ ▒ ██ ██  ██
-      ██    █████▒ ▒████▒ ██   ██ █████▒
-      ▒▒    ▒▒▒▒▒   ▒▒▒▒  ▒▒   ▒▒ ▒▒▒▒▒
-                                         """
+     ▗▄▖▗▄▄▄▖▗▄▄▖     ▗▄▄▖  ▗▄▖ ▗▖  ▗▖▗▄▄▖ ▗▄▄▄▖▗▄▄▖ 
+    ▐▌ ▐▌ █  ▐▌ ▐▌    ▐▌ ▐▌▐▌ ▐▌▐▛▚▞▜▌▐▌ ▐▌▐▌   ▐▌ ▐▌
+    ▐▌ ▐▌ █  ▐▛▀▘     ▐▛▀▚▖▐▌ ▐▌▐▌  ▐▌▐▛▀▚▖▐▛▀▀▘▐▛▀▚▖
+    ▝▚▄▞▘ █  ▐▌       ▐▙▄▞▘▝▚▄▞▘▐▌  ▐▌▐▙▄▞▘▐▙▄▄▖▐▌ ▐▌                         
+                                                 """
     if ASCII_MODE:
         logo = ""
-    version = "Version: "+__VERSION__
     contributors = "Contributors: "+" ".join(__CONTRIBUTORS__)
     print(random.choice(ALL_COLORS) + logo + RESET_ALL)
-    mesgdcrt.SuccessMessage(version)
     mesgdcrt.SectionMessage(contributors)
     print()
-
-
-def check_intr():
-    try:
-        requests.get("https://motherfuckingwebsite.com")
-    except Exception:
-        bann_text()
-        mesgdcrt.FailureMessage("Poor internet connection detected")
-        sys.exit(2)
 
 
 def format_phone(num):
     num = [n for n in num if n in string.digits]
     return ''.join(num).strip()
-
-
-def do_zip_update():
-    success = False
-    if DEBUG_MODE:
-        zip_url = "https://github.com/TheSpeedX/TBomb/archive/dev.zip"
-        dir_name = "TBomb-dev"
-    else:
-        zip_url = "https://github.com/TheSpeedX/TBomb/archive/master.zip"
-        dir_name = "TBomb-master"
-    print(ALL_COLORS[0]+"Downloading ZIP ... "+RESET_ALL)
-    response = requests.get(zip_url)
-    if response.status_code == 200:
-        zip_content = response.content
-        try:
-            with zipfile.ZipFile(BytesIO(zip_content)) as zip_file:
-                for member in zip_file.namelist():
-                    filename = os.path.split(member)
-                    if not filename[1]:
-                        continue
-                    new_filename = os.path.join(
-                        filename[0].replace(dir_name, "."),
-                        filename[1])
-                    source = zip_file.open(member)
-                    target = open(new_filename, "wb")
-                    with source, target:
-                        shutil.copyfileobj(source, target)
-            success = True
-        except Exception:
-            mesgdcrt.FailureMessage("Error occured while extracting !!")
-    if success:
-        mesgdcrt.SuccessMessage("TBomb was updated to the latest version")
-        mesgdcrt.GeneralMessage(
-            "Please run the script again to load the latest version")
-    else:
-        mesgdcrt.FailureMessage("Unable to update TBomb.")
-        mesgdcrt.WarningMessage(
-            "Grab The Latest one From https://github.com/TheSpeedX/TBomb.git")
-
-    sys.exit()
-
-def notifyen():
-    try:
-        if DEBUG_MODE:
-            url = "https://github.com/TheSpeedX/TBomb/raw/dev/.notify"
-        else:
-            url = "https://github.com/TheSpeedX/TBomb/raw/master/.notify"
-        noti = requests.get(url).text.upper()
-        if len(noti) > 10:
-            mesgdcrt.SectionMessage("NOTIFICATION: " + noti)
-            print()
-    except Exception:
-        pass
 
 
 def get_phone_info():
@@ -176,21 +97,16 @@ def get_mail_info():
 def pretty_print(cc, target, success, failed):
     requested = success+failed
     mesgdcrt.SectionMessage("Bombing is in progress - Please be patient")
-    mesgdcrt.GeneralMessage(
-        "Please stay connected to the internet during bombing")
     mesgdcrt.GeneralMessage("Target       : " + cc + " " + target)
     mesgdcrt.GeneralMessage("Sent         : " + str(requested))
     mesgdcrt.GeneralMessage("Successful   : " + str(success))
     mesgdcrt.GeneralMessage("Failed       : " + str(failed))
-    mesgdcrt.WarningMessage(
-        "This tool was made for fun and research purposes only")
-    mesgdcrt.SuccessMessage("TBomb was created by SpeedX")
 
 
 def workernode(mode, cc, target, count, delay, max_threads):
 
     api = APIProvider(cc, target, mode, delay=delay)
-    clr()
+    os.system("clear")
     mesgdcrt.SectionMessage("Gearing up the Bomber - Please be patient")
     mesgdcrt.GeneralMessage(
         "Please stay connected to the internet during bombing")
@@ -233,7 +149,7 @@ def workernode(mode, cc, target, count, delay, max_threads):
                     success += 1
                 else:
                     failed += 1
-                clr()
+                os.system("clear")
                 pretty_print(cc, target, success, failed)
     print("\n")
     mesgdcrt.SuccessMessage("Bombing completed!")
@@ -245,10 +161,8 @@ def workernode(mode, cc, target, count, delay, max_threads):
 def selectnode(mode="sms"):
     mode = mode.lower().strip()
     try:
-        clr()
+        os.system("clear")
         bann_text()
-        check_intr()
-        notifyen()
 
         max_limit = {"sms": 500, "call": 15, "mail": 200}
         cc, target = "", ""
@@ -304,57 +218,38 @@ def selectnode(mode="sms"):
 
 mesgdcrt = MessageDecorator("icon")
 if sys.version_info[0] != 3:
-    mesgdcrt.FailureMessage("TBomb will work only in Python v3")
+    mesgdcrt.FailureMessage("OTP-BOMBER will work only in Python v3")
     sys.exit()
-
-country_codes = readisdc()["isdcodes"]
-
-
-__VERSION__ = get_version()
-__CONTRIBUTORS__ = ['SpeedX', 't0xic0der', 'scpketer', 'Stefan']
-
-ALL_COLORS = [Fore.GREEN, Fore.RED, Fore.YELLOW, Fore.BLUE,
-              Fore.MAGENTA, Fore.CYAN, Fore.WHITE]
-RESET_ALL = Style.RESET_ALL
 
 ASCII_MODE = False
 DEBUG_MODE = False
 
-description = """TBomb - Your Friendly Spammer Application
+description = """OTP-BOMBER - Your Friendly Spammer Application
 
-TBomb can be used for many purposes which incudes -
+OTP-BOMBER can be used for many purposes which incudes -
 \t Exposing the vulnerable APIs over Internet
 \t Friendly Spamming
 \t Testing Your Spam Detector and more ....
 
-TBomb is not intented for malicious uses.
+OTP-BOMBER is not intented for malicious uses.
 """
 
 parser = argparse.ArgumentParser(description=description,
-                                 epilog='Coded by SpeedX !!!')
+                                 epilog='Coded by Ansh !!!')
 parser.add_argument("-sms", "--sms", action="store_true",
-                    help="start TBomb with SMS Bomb mode")
+                    help="start OTP-BOMBER with SMS Bomb mode")
 parser.add_argument("-call", "--call", action="store_true",
-                    help="start TBomb with CALL Bomb mode")
+                    help="start OTP-BOMBER with CALL Bomb mode")
 parser.add_argument("-mail", "--mail", action="store_true",
-                    help="start TBomb with MAIL Bomb mode")
+                    help="start OTP-BOMBER with MAIL Bomb mode")
 parser.add_argument("-ascii", "--ascii", action="store_true",
                     help="show only characters of standard ASCII set")
-parser.add_argument("-u", "--update", action="store_true",
-                    help="update TBomb")
-parser.add_argument("-c", "--contributors", action="store_true",
-                    help="show current TBomb contributors")
-parser.add_argument("-v", "--version", action="store_true",
-                    help="show current TBomb version")
-
 
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.ascii:
         ASCII_MODE = True
         mesgdcrt = MessageDecorator("stat")
-    if args.version:
-        print("Version: ", __VERSION__)
     elif args.contributors:
         print("Contributors: ", " ".join(__CONTRIBUTORS__))
     elif args.mail:
@@ -372,7 +267,7 @@ if __name__ == "__main__":
         }
         try:
             while (choice not in avail_choice):
-                clr()
+                os.system("clear")
                 bann_text()
                 print("Available Options:\n")
                 for key, value in avail_choice.items():

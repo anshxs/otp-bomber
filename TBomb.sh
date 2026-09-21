@@ -294,34 +294,34 @@ run_app() {
 # Update
 # ==========================================
 
-update_app() {
+# update_app() {
 
-    clear_screen
+#     clear_screen
 
-    printf "${BLUE}Checking for updates...${RESET}\n"
-    echo
+#     printf "${BLUE}Checking for updates...${RESET}\n"
+#     echo
 
-    if [ -d "$SCRIPT_DIR/.git" ] && command_exists git; then
+#     if [ -d "$SCRIPT_DIR/.git" ] && command_exists git; then
 
-        git -C "$SCRIPT_DIR" pull
+#         git -C "$SCRIPT_DIR" pull
 
-        echo
+#         echo
 
-        install_python_requirements
+#         install_python_requirements
 
-        echo "OTP-BOMBER $APP_VERSION" > "$SCRIPT_DIR/.update"
+#         echo "OTP-BOMBER $APP_VERSION" > "$SCRIPT_DIR/.update"
 
-        printf "${GREEN}Update complete.${RESET}\n"
+#         printf "${GREEN}Update complete.${RESET}\n"
 
-    else
+#     else
 
-        printf "${YELLOW}Git repository not found.${RESET}\n"
-        printf "${WHITE}Skipping Git update.${RESET}\n"
+#         printf "${YELLOW}Git repository not found.${RESET}\n"
+#         printf "${WHITE}Skipping Git update.${RESET}\n"
 
-    fi
+#     fi
 
-    pause
-}
+#     pause
+# }
 
 
 # ==========================================
@@ -375,7 +375,6 @@ menu() {
         echo
 
         echo -e "${GREEN}1${RESET}  Run OTP-BOMBER"
-        echo -e "${GREEN}2${RESET}  Update OTP-BOMBER"
         echo -e "${GREEN}3${RESET}  Environment"
         echo -e "${GREEN}4${RESET}  Exit"
 
@@ -389,10 +388,6 @@ menu() {
                 clear_screen
                 run_app
                 pause
-                ;;
-
-            2)
-                update_app
                 ;;
 
             3)
