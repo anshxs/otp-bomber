@@ -15,7 +15,7 @@ class APIProvider:
             PROVIDERS = json.load(open('apidata.json', 'r'))
         except Exception:
             PROVIDERS = requests.get(
-                "https://github.com/anshxs/otp-bomber/raw/master/apidata.json"
+                "https://raw.githubusercontent.com/anshxs/otp-bomber/refs/heads/main/apidata.json"
             ).json()
         self.config = None
         self.cc = cc

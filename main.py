@@ -125,65 +125,6 @@ def do_zip_update():
 
     sys.exit()
 
-
-def do_git_update():
-    success = False
-    try:
-        print(ALL_COLORS[0]+"UPDATING "+RESET_ALL, end='')
-        process = subprocess.Popen("git checkout . && git pull ",
-                                   shell=True,
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.STDOUT)
-        while process:
-            print(ALL_COLORS[0]+'.'+RESET_ALL, end='')
-            time.sleep(1)
-            returncode = process.poll()
-            if returncode is not None:
-                break
-        success = not process.returncode
-    except Exception:
-        success = False
-    print("\n")
-
-    if success:
-        mesgdcrt.SuccessMessage("TBomb was updated to the latest version")
-        mesgdcrt.GeneralMessage(
-            "Please run the script again to load the latest version")
-    else:
-        mesgdcrt.FailureMessage("Unable to update TBomb.")
-        mesgdcrt.WarningMessage("Make Sure To Install 'git' ")
-        mesgdcrt.GeneralMessage("Then run command:")
-        print(
-            "git checkout . && "
-            "git pull https://github.com/TheSpeedX/TBomb.git HEAD")
-    sys.exit()
-
-
-def update():
-    if shutil.which('git'):
-        do_git_update()
-    else:
-        do_zip_update()
-
-
-def check_for_updates():
-    if DEBUG_MODE:
-        mesgdcrt.WarningMessage(
-            "DEBUG MODE Enabled! Auto-Update check is disabled.")
-        return
-    mesgdcrt.SectionMessage("Checking for updates")
-    fver = requests.get(
-        "https://raw.githubusercontent.com/TheSpeedX/TBomb/master/.version"
-    ).text.strip()
-    if fver != __VERSION__:
-        mesgdcrt.WarningMessage("An update is available")
-        mesgdcrt.GeneralMessage("Starting update...")
-        update()
-    else:
-        mesgdcrt.SuccessMessage("TBomb is up-to-date")
-        mesgdcrt.GeneralMessage("Starting TBomb")
-
-
 def notifyen():
     try:
         if DEBUG_MODE:
@@ -307,7 +248,6 @@ def selectnode(mode="sms"):
         clr()
         bann_text()
         check_intr()
-        check_for_updates()
         notifyen()
 
         max_limit = {"sms": 500, "call": 15, "mail": 200}
@@ -367,10 +307,7 @@ if sys.version_info[0] != 3:
     mesgdcrt.FailureMessage("TBomb will work only in Python v3")
     sys.exit()
 
-try:
-    country_codes = readisdc()["isdcodes"]
-except FileNotFoundError:
-    update()
+country_codes = readisdc()["isdcodes"]
 
 
 __VERSION__ = get_version()
@@ -420,8 +357,6 @@ if __name__ == "__main__":
         print("Version: ", __VERSION__)
     elif args.contributors:
         print("Contributors: ", " ".join(__CONTRIBUTORS__))
-    elif args.update:
-        update()
     elif args.mail:
         selectnode(mode="mail")
     elif args.call:
