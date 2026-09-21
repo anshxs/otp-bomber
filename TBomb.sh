@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-APP_NAME="ANSH"
+APP_NAME="OTP-BOMBER"
 APP_VERSION="1.0.0"
 
 # ==========================================
@@ -101,7 +101,7 @@ banner() {
     printf "${RESET}"
 
     echo
-    printf "${BLUE}Ansh CLI Toolkit${RESET}\n"
+    printf "${BLUE}OTP BOMBER CLI Toolkit${RESET}\n"
     printf "${WHITE}Version : ${APP_VERSION}${RESET}\n"
     printf "${WHITE}Platform: ${PLATFORM}${RESET}\n"
     echo
@@ -262,7 +262,7 @@ initialize() {
 
         install_python_requirements
 
-        echo "ANSH $APP_VERSION" > "$SCRIPT_DIR/.update"
+        echo "OTP-BOMBER $APP_VERSION" > "$SCRIPT_DIR/.update"
 
         printf "${GREEN}Requirements installed.${RESET}\n"
 
@@ -309,7 +309,7 @@ update_app() {
 
         install_python_requirements
 
-        echo "ANSH $APP_VERSION" > "$SCRIPT_DIR/.update"
+        echo "OTP-BOMBER $APP_VERSION" > "$SCRIPT_DIR/.update"
 
         printf "${GREEN}Update complete.${RESET}\n"
 
@@ -333,7 +333,7 @@ environment_info() {
     clear_screen
 
     echo
-    printf "${CYAN}ANSH Environment${RESET}\n"
+    printf "${CYAN}OTP-BOMBER Environment${RESET}\n"
     echo "-------------------------"
 
     echo "App       : $APP_NAME"
@@ -374,8 +374,8 @@ menu() {
         echo -e "${WHITE}Please select an option:${RESET}"
         echo
 
-        echo -e "${GREEN}1${RESET}  Run ANSH"
-        echo -e "${GREEN}2${RESET}  Update ANSH"
+        echo -e "${GREEN}1${RESET}  Run OTP-BOMBER"
+        echo -e "${GREEN}2${RESET}  Update OTP-BOMBER"
         echo -e "${GREEN}3${RESET}  Environment"
         echo -e "${GREEN}4${RESET}  Exit"
 
@@ -401,7 +401,7 @@ menu() {
 
             4)
                 clear_screen
-                printf "${CYAN}Thanks for using ANSH.${RESET}\n"
+                printf "${CYAN}Thanks for using OTP-BOMBER.${RESET}\n"
                 exit 0
                 ;;
 
@@ -425,7 +425,7 @@ detect_platform
 if [ "$PLATFORM" = "unsupported" ]; then
 
     echo
-    echo "ANSH currently supports:"
+    echo "OTP-BOMBER currently supports:"
     echo "  • macOS Terminal"
     echo "  • Android Termux"
     echo
