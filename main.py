@@ -145,7 +145,6 @@ def workernode(mode, cc, target, count, delay, max_threads):
                 pretty_print(cc, target, success, failed)
     print("\n")
     mesgdcrt.SuccessMessage("Bombing completed!")
-    time.sleep(1.5)
     bann_text()
     sys.exit()
 
