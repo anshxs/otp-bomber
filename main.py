@@ -28,13 +28,11 @@ except ImportError:
     sys.exit(1)
 
 
-def readisdc():
-    with open("isdcodes.json") as file:
-        isdcodes = json.load(file)
-    return isdcodes
+with open("isdcodes.json") as file:
+    isdcodes = json.load(file)
 
-country_codes = readisdc()["isdcodes"]
-__CONTRIBUTORS__ = ['Ansh Sharma']
+country_codes = isdcodes["isdcodes"]
+contrbs = ['Ansh Sharma']
 ALL_COLORS = [Fore.GREEN, Fore.RED, Fore.YELLOW, Fore.BLUE,
               Fore.MAGENTA, Fore.CYAN, Fore.WHITE]
 RESET_ALL = Style.RESET_ALL
@@ -49,15 +47,9 @@ def bann_text():
                                                  """
     if ASCII_MODE:
         logo = ""
-    contributors = "Contributors: "+" ".join(__CONTRIBUTORS__)
     print(random.choice(ALL_COLORS) + logo + RESET_ALL)
-    mesgdcrt.SectionMessage(contributors)
+    mesgdcrt.SectionMessage("Contributors: "+" ".join(contrbs))
     print()
-
-
-def format_phone(num):
-    num = [n for n in num if n in string.digits]
-    return ''.join(num).strip()
 
 
 def get_phone_info():
@@ -65,7 +57,7 @@ def get_phone_info():
         target = ""
         cc = input(mesgdcrt.CommandMessage(
             "Enter your country code (Without +): "))
-        cc = format_phone(cc)
+        cc = ''.join([n for n in cc if n in string.digits]).strip()
         if not country_codes.get(cc, False):
             mesgdcrt.WarningMessage(
                 "The country code ({cc}) that you have entered"
@@ -73,7 +65,7 @@ def get_phone_info():
             continue
         target = input(mesgdcrt.CommandMessage(
             "Enter the target number: +" + cc + " "))
-        target = format_phone(target)
+        target = ''.join([n for n in target if n in string.digits]).strip()
         if ((len(target) <= 6) or (len(target) >= 12)):
             mesgdcrt.WarningMessage(
                 "The phone number ({target})".format(target=target) +
@@ -244,6 +236,8 @@ parser.add_argument("-mail", "--mail", action="store_true",
                     help="start OTP-BOMBER with MAIL Bomb mode")
 parser.add_argument("-ascii", "--ascii", action="store_true",
                     help="show only characters of standard ASCII set")
+parser.add_argument("-contributors", "--contributors", action="store_true",
+                    help="show contributors of OTP-BOMBER")
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -251,7 +245,7 @@ if __name__ == "__main__":
         ASCII_MODE = True
         mesgdcrt = MessageDecorator("stat")
     elif args.contributors:
-        print("Contributors: ", " ".join(__CONTRIBUTORS__))
+        print("Contributors: ", " ".join(contrbs))
     elif args.mail:
         selectnode(mode="mail")
     elif args.call:
